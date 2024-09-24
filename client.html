@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32Cam Live Stream</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .content-box {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        #designedText {
+            margin-top: 20px;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        #designedText b {
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content-box">
+        <h1 class="text-center">ESP32Cam Live Stream</h1>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <img id="displayedImage" class="img-fluid"
+                        src="https://img.freepik.com/premium-vector/ban-wifi-internet-wireless-signal-connection-prohibition-vector-graphic-illustration_485380-55.jpg">
+                </div>
+            </div>
+            <script>
+                const img = document.getElementById('displayedImage');
+                const WS_URL = 'ws:///20.40.50.76:8080';
+                const ws = new WebSocket(WS_URL);
+                let urlObject;
+
+                ws.onopen = () => console.log(`Connected to ${WS_URL}`);
+                ws.onmessage = message => {
+                    const arrayBuffer = message.data;
+                    if (urlObject) {
+                        URL.revokeObjectURL(urlObject);
+                    }
+                    urlObject = URL.createObjectURL(new Blob([arrayBuffer]));
+                    img.src = urlObject;
+                }
+            </script>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-sm-10 text-center">
+                    <div id="designedText">
+                        <b>Designed & Developed by INNOVATE2GETHER</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // jQuery code for changing text color at regular intervals
+        $(document).ready(function () {
+            setInterval(function () {
+                let randomColor;
+                do {
+                    randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                } while (randomColor === '#ffffff'); // Avoid white color
+
+                $('#designedText').css('background-color', randomColor);
+            }, 1000); // Change color every 2 seconds (adjust as needed)
+        });
+    </script>
+</body>
+
+</html>
